@@ -8,6 +8,7 @@ import GenreWidget from '@/components/widgets/GenreWidget';
 import DecadeWidget from '@/components/widgets/DecadeWidget';
 import PopularityWidget from '@/components/widgets/PopularityWidget';
 import ArtistWidget from '@/components/widgets/ArtistWidget';
+import TrackWidget from '@/components/widgets/TrackWidget';
 import PlaylistDisplay from '@/components/PlaylistDisplay';
 
 export default function Dashboard() {
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const [decades, setDecades] = useState([]);
   const [popularity, setPopularity] = useState([0, 100]);
   const [artists, setArtists] = useState([]);
+  const [tracks, setTracks] = useState([]);
   const [playlist, setPlaylist] = useState([]);
   const [playlistLoading, setPlaylistLoading] = useState(false);
 
@@ -49,7 +51,7 @@ export default function Dashboard() {
 
   // generar playlist cuando cambien las preferencias
   useEffect(() => {
-    if (!genres.length && !decades.length && !artists.length) {
+    if (!genres.length && !decades.length && !artists.length && !tracks.length) {
       return;
     }
 
@@ -58,6 +60,9 @@ export default function Dashboard() {
       try {
         const token = getAccessToken();
         let allTracks = [];
+
+        // agregar tracks seleccionados directamente
+        allTracks.push(...tracks);
 
         // traer canciones de artistas
         for (const artist of artists) {
@@ -113,7 +118,7 @@ export default function Dashboard() {
     };
 
     generatePlaylist();
-  }, [genres, decades, popularity, artists]);
+  }, [genres, decades, popularity, artists, tracks]);
 
   // remover track
   const removeTrack = (trackId) => {
@@ -179,6 +184,11 @@ export default function Dashboard() {
               <ArtistWidget
                 selectedArtists={artists}
                 onSelectArtists={setArtists}
+              />
+
+              <TrackWidget
+                selectedTracks={tracks}
+                onSelectTracks={setTracks}
               />
             </div>
           </div>
